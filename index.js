@@ -1,10 +1,10 @@
 'use strict';
-const excelToJson = require('convert-excel-to-json');
-const fs = require('fs');
-const javaProps = require('java-props');
+import excelToJson from 'convert-excel-to-json';
+import { open, write, close } from 'fs';
+import { parseFile } from 'java-props';
 
 //Parsing *.properties file into JSON (encoding ISO8859-1 <-> latin1)
-javaProps.parseFile('storetext_FRG_en_US.properties','latin1').then((props) => {
+parseFile('storetext_FRG_en_US.properties','latin1').then((props) => {
     //console.log(properties);
     // { a: 'Hello World', b: 'Node.js®', c: 'value', d: 'foobar' }
 	
@@ -56,15 +56,15 @@ javaProps.parseFile('storetext_FRG_en_US.properties','latin1').then((props) => {
 	let buffer = new Buffer(propsStr);
 
 	// open the file in writing mode, adding a callback function where we do the actual writing
-	fs.open(path, 'w', function(err, fd) {
+	open(path, 'w', function(err, fd) {
 		if (err) {
 			throw 'could not open file: ' + err;
 		}
 
 		// write the contents of the buffer, from position 0 to the end, to the file descriptor returned in opening our file
-		fs.write(fd, buffer, 0, buffer.length, null, function(err) {
+		write(fd, buffer, 0, buffer.length, null, function(err) {
 			if (err) throw 'error writing file: ' + err;
-			fs.close(fd, function() {
+			close(fd, function() {
 				console.log('wrote the file successfully');
 			});
 		});
